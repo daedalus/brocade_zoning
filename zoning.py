@@ -21,13 +21,13 @@ def mkcfg(wwns,zoning,cfgs):
 	for wwn in wwns:
 		k = wwn.keys()	
 		v = wwn.values()
-		alias = "alicreate %s, %s" % (k[0],v[0])
+		alias = """alicreate %s, "%s" """ % (k[0],(";").join(v[0]))
 		txt = txt + alias + "\n"
 
 	for zone in zoning:
 		k = zone.keys()
 		v = zone.values()
-		zone = 'zonecreate %s, "%s; %s"' % (k[0],v[0][0],v[0][1])
+		zone = """zonecreate "%s", "%s" """ % (k[0],(";").join(v[0]))
 		txt = txt + zone + "\n"
 
 	i = 0
