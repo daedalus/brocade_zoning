@@ -7,16 +7,19 @@ import sys
 
 def proc_json(filename):
 	json_data = ''
-	f = open(filename)
+	fp = open(filename,"r")
 	#import ast
 	import json
        	#j = ast.literal_eval(json_data)
-	j = json.load(f)
+	j = json.load(fp)
+	fp.close()
 	return j
-
-def mkcfg(wwns,zoning,cfgs):
-
-	txt = "cfgclear\n"
+	
+def mkcfg(wwns,zoning,cfgs,clear=True)
+	if clear:
+		txt = "cfgclear\n"
+	else:
+		txt = ""
 
 	for wwn in wwns:
 		k = wwn.keys()	
@@ -30,19 +33,23 @@ def mkcfg(wwns,zoning,cfgs):
 		zone = 'zonecreate %s, "%s; %s"' % (k[0],v[0][0],v[0][1])
 		txt = txt + zone + "\n"
 
-	i = 0
-
 	cfgname = cfgs.keys()[0]
 	members = cfgs.values()[0]
 
-	for member in members:
-		if i == 0:
-			cfg = "cfgcreate %s, %s" % (cfgname,member)
-		else:
+	if clear == True:
+		i = 0
+		for member in members:
+			if i == 0:
+				cfg = "cfgcreate %s, %s" % (cfgname,member)
+			else:
+				cfg = "cfgadd %s, %s" % (cfgname,member)
+			i+=1
+			txt = txt + cfg + "\n"
+	else:
+		for member in members:
 			cfg = "cfgadd %s, %s" % (cfgname,member)
-		i+=1
-		txt = txt + cfg + "\n"
-
+			txt = txt + cfg + "\n"
+			
 	txt = txt + "cfgenable %s" % cfgname
 
 	return txt
@@ -52,4 +59,4 @@ wwns = json['ALIAS']
 zoning = json['ZONES']
 cfgs = json['CFGS']
 
-print mkcfg(wwns,zoning,cfgs)
+print (mkcfg(wwns,zoning,cfgs))
