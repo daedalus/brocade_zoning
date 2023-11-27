@@ -7,12 +7,11 @@ import sys
 
 def proc_json(filename):
 	json_data = ''
-	fp = open(filename,"r")
-	#import ast
-	import json
+	with open(filename,"r") as fp:
+		#import ast
+		import json
        	#j = ast.literal_eval(json_data)
-	j = json.load(fp)
-	fp.close()
+		j = json.load(fp)
 	return j
 	
 def mkcfg(wwns,zoning,cfgs,clear=True)
